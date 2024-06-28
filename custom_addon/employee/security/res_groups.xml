@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="employee_transfer_module_management" model="ir.module.category">
+        <field name="name">Employee Transfer</field>
+        <field name="description">Manager Of Employee_transfer</field>
+        <field name="sequence">31</field>
+    </record>
+
+    <record id="employee_transfer_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="employee_transfer_module_management"/>
+    </record>
+
+    <record id="employee_transfer_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="employee_transfer_module_management"/>
+    </record>
+</odoo>
+

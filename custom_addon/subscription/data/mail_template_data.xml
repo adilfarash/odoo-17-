@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--        Email Templet-->
+        <record id="recurring_subscription_email" model="mail.template">
+            <field name="name">Email Recurring Subscription</field>
+            <field name="model_id" ref="subscription.model_recurring_subscription"/>
+            <field name="subject">{{ object.company_id.name }}</field>
+            <field name="email_to">{{ object.customer_id.email }}</field>
+            <field name="description">Add Description</field>
+            <field name="body_html" type="html">
+                <div>
+                    <p>
+                        Hi <t t-out='object.customer_id.name'/>,
+                        <br/>
+                        We are sending this mail to inform you that your
+                        <t t-out='object.order'/>
+                        subscription plan is in confirm state
+                        <br/>
+                        <br/>
+                        <br/>
+                        Thank You<br/>
+                        +91 9567893290<br/>
+                        Mitchel Admin
+                        <br/>
+                        <br/>
+                    </p>
+                </div>
+            </field>
+        </record>
+</odoo>

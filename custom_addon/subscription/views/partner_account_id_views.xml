@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="partner_view_form" model="ir.ui.view">
+        <field name="name">partner.account.id.form</field>
+        <field name="model">partner.account.id</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <group>
+                <field name="account_id"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="partner_view_tree" model="ir.ui.view">
+        <field name="name">partner.account.id.view.tree</field>
+        <field name="model">partner.account.id</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="account_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="partner_action" model="ir.actions.act_window">
+        <field name="name">Partner Account Id</field>
+        <field name="res_model">partner.account.id</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="partner_menu" name="Partner Account" action="partner_action" parent="recurring_menu_action"/>
+</odoo>

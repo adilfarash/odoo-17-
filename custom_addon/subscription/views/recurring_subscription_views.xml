@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!--views-->
+    <record id="subscription_view_form" model="ir.ui.view">
+        <field name="name">recurring.subscription.form</field>
+        <field name="model">recurring.subscription</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <header>
+                    <!--                    button when clicking state changes and hide the button -->
+                    <button name="action_confirm" class="oe_highlight" state="confirm" string="Confirm"
+                            type="object" help="Move to confirm state" invisible="state in ['state', 'confirm']"/>
+                    <button name="action_cancel" state="cancel" string="Cancel"
+                            type="object" help="Move  to cancel state" invisible="state in ['state', 'cancel']"/>
+                    <!--                    state -->
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}" default="draft"
+                           statusbar_visible='draft,confirm,done'/>
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="order"/>
+                            <field name="name"/>
+                            <field name="product_id"/>
+                            <field name="customer_id"/>
+                            <field name="company_id"/>
+                            <field name="recurring_amount"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="establishment_id"/>
+                                <field name="date"/>
+                                <field name="due_date"/>
+                                <field name="next_billing"/>
+                                <field name="is_lead"/>
+                            </group>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Line">
+                            <field name="recurring_credit_a_ids" invisible="1"/>
+                            <field name="recurring_credit_ids" domain="[('id', 'in',recurring_credit_a_ids )]"/>
+                        </page>
+                        <page string="Billing">
+                            <field name="billing_schedule_ids"/>
+                        </page>
+                        <page string="Description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Other Info">
+                            <field name="terms_and_conditions"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <!--    <!   tree view&ndash;&gt;-->
+    <record id="recurring_subscription_view_tree" model="ir.ui.view">
+        <field name="name">recurring.subscription.view.tree</field>
+        <field name="model">recurring.subscription</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="order"/>
+                <field name="customer_id"/>
+                <field name="due_date"/>
+                <field name="state"/>
+                <field name="recurring_amount" sum="total"/>
+            </tree>
+        </field>
+    </record>
+    <!--    search view-->
+    <record id="recurring_subscription_view_search" model="ir.ui.view">
+        <field name="name">recurring.subscription.search</field>
+        <field name="model">recurring.subscription</field>
+        <field name="arch" type="xml">
+            <search string="search">
+                <field name="establishment_id"/>
+                <field name="product_id"/>
+            </search>
+        </field>
+    </record>
+    <!--    action for recurring subscription-->
+    <record id="recurring_action" model="ir.actions.act_window">
+        <field name="name">Recurring Subscription</field>
+        <field name="res_model">recurring.subscription</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <!--   menu-->
+    <menuitem id="recurring_menu_action" name="Recurring Subscription" action="recurring_action">
+        <menuitem id="recurring_subscription_menu" name="Subscription" action="recurring_action"
+                  sequence="1"/>
+    </menuitem>
+</odoo>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--adding product when installing the module-->
+      <record id="credit_product" model="product.product">
+        <field name="name">Subscription credit</field>
+        <field name="type">service</field>
+        <field name="default_code">SubscriptionCredit</field>
+    </record>
+</odoo>

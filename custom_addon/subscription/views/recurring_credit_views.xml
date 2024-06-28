@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="credit_view_form" model="ir.ui.view">
+        <field name="name">recurring.credit.form</field>
+        <field name="model">recurring.credit</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable' : '1'}"
+                           statusbar_visible="pending,confirm,first_approved,fully_approved"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="recurring_subscription_id"/>
+                            <field name="period_date"/>
+                            <field name="credit_amount"/>
+                        </group>
+                        <group>
+                            <field name="establishment_id"/>
+                            <field name="due_date"/>
+                            <field name="partner_id"/>
+                            <field name="company_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="recurring_credit_view_tree" model="ir.ui.view">
+        <field name="name">recurring_credit.view.tree</field>
+        <field name="model">recurring.credit</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="recurring_subscription_id"/>
+                <field name="partner_id"/>
+                <field name="period_date"/>
+                <field name="state"/>
+                <field name="credit_amount"/>
+            </tree>
+        </field>
+    </record>
+    <record id="credit_action" model="ir.actions.act_window">
+        <field name="name">Credit</field>
+        <field name="res_model">recurring.credit</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="credit_menu_action" name="Credit" action="credit_action"
+              parent="recurring_menu_action" groups="recurring_subscription_manager_access"/>
+</odoo>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="demo_report" model="ir.actions.report">
+        <field name="name">Print Demo report</field>
+        <field name="model">sale.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">pdf_demo.print_demo_report</field>
+        <field name="report_file">pdf_demo.print_demo_report</field>
+        <field name="print_report_name">'Order - %s' % (object.name).replace('/', '')</field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="pdf_demo.paperformat_full_page"/>
+    </record>
+
+    <template id="demo_report_template">
+        <t t-call="web.external_layout">
+            <div class="row">
+                <div t-field="doc.partner_id" class="col-6"
+                     t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": False, "phone_icons": True}'/>
+                <div class="col-6 text-center">
+                    <div t-field="doc.partner_id.image_1920"
+                         t-options='{"widget": "image",
+                                          "class": "oe_avatar",
+                                           "style": "max-height: 120px; object-fit: contain"}'/>
+                </div>
+            </div>
+            <div class="page">
+                <h2 class="mt-3">
+                    <span t-if="doc.state in ['draft','sent']">Quotation #</span>
+                    <span t-else="">Order #</span>
+                    <span t-field="doc.name">SO0000</span>
+                </h2>
+                <div class="row mt-4 mb-2" id="informations">
+                    <div t-if="doc.date_order" class="col-auto col-3 mw-100 mb-2" name="informations_date">
+                        <strong>Order Date:</strong>
+                        <br/>
+                        <span class="m-0" t-field="doc.date_order" t-options='{"widget": "date"}'/>
+                    </div>
+                </div>
+                <table class="table table-sm o_main_table table-borderless mt-4">
+                    <thead>
+                        <tr>
+                            <th name="th_description" class="text-start">Description</th>
+                            <th name="th_barcode" class="text-start">Barcode</th>
+                            <th name="th_quantity" class="text-end">Quantity</th>
+                            <th name="th_priceunit" class="text-end">Unit Price</th>
+                            <th name="th_taxes" class="text-end">Taxes</th>
+                            <th name="th_subtotal" class="text-end">
+                                <span>Amount</span>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="sale_tbody">
+                        <t t-set="lines_to_report" t-value="doc._get_order_lines_to_report()"/>
+                        <t t-foreach="lines_to_report" t-as="line">
+                            <tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+                                <t t-if="not line.display_type">
+                                    <td name="td_name">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                    <td name="td_barcode">
+                                        <!--                                        Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',-->
+                                        <!--                                        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',-->
+                                        <!--                                        'UPCA', 'USPS_4State'-->
+
+                                        <span t-if="line.product_id"
+                                              t-field="line.product_id.barcode"
+                                              t-options="{'widget': 'barcode', 'humanreadable': 1,
+                                                           'symbology': 'auto',
+                                                           'width': 300,
+                                                           'height': 200,
+                                                           'img_style': 'width:90px;height:40px;',
+                                                           'img_alt': 'Barcode'}"/>
+                                    </td>
+                                    <td name="td_quantity" class="text-end">
+                                        <span t-field="line.product_uom_qty"/>
+                                        <span t-field="line.product_uom"/>
+                                    </td>
+                                    <td name="td_priceunit" class="text-end">
+                                        <span t-field="line.price_unit"
+                                              t-options='{"widget": "monetary", "display_currency": doc.currency_id}'/>
+                                    </td>
+                                    <!--                                    t-options='{"widget": "float", "decimal_precision": "Stock Weight"}'-->
+                                    <!--                                    t-options='{"widget": "integer"}'-->
+                                    <!--                                    t-options='{"widget": "datetime", "time_only": True, "hide_seconds": True'-->
+
+                                    <td name="td_taxes" class="text-end">
+                                        <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
+                                    </td>
+                                    <td t-if="not line.is_downpayment" name="td_subtotal"
+                                        class="text-end o_price_total">
+                                        <span t-field="line.price_subtotal"/>
+                                    </td>
+                                </t>
+                                <t t-elif="line.display_type == 'line_section'">
+                                    <td name="td_section_line" colspan="99">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                </t>
+                                <t t-elif="line.display_type == 'line_note'">
+                                    <td name="td_note_line" colspan="99">
+                                        <span t-field="line.name"/>
+                                    </td>
+                                </t>
+                            </tr>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="clearfix" name="so_total_summary">
+                    <div id="total" class="row" name="total">
+                        <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ms-auto">
+                            <table class="table table-sm table-borderless">
+                                <t t-set="tax_totals" t-value="doc.tax_totals"/>
+                                <!--                            document_tax_totals_template-->
+                                <t t-call="sale.document_tax_totals"/>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div t-if="bar_chart_image.get(doc.id)" id="b_chart" class="text-center">
+                    <img t-att-src="'data:image/png;base64,' + bar_chart_image.get(doc.id).decode('utf-8')"
+                         t-att-mime-type="'image/png'"
+                         class="object-fit-contain border rounded"/>
+                </div>
+                <div t-if="pie_chart_image.get(doc.id)" id="p_chart" class="text-center"
+                     style="page-break-before:always;">
+                    <img t-att-src="'data:image/png;base64,' + pie_chart_image.get(doc.id).decode('utf-8')"
+                         t-att-mime-type="'image/png'"
+                         class="object-fit-contain border rounded"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="print_demo_report">
+        <t t-name="pdf_demo.issued_pick_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="pdf_demo.demo_report_template" t-lang="doc.partner_id.lang"/>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>
+

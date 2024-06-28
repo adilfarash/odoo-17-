@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="recurring_subscription_module_management" model="ir.module.category" >
+        <field name="name">Subscription Manager</field>
+        <field name="description">Manager Of Subscription Module</field>
+        <field name="sequence">30</field>
+    </record>
+
+    <record id="recurring_subscription_user_access" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="recurring_subscription_module_management"/>
+    </record>
+    <record id="recurring_subscription_manager_access" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="recurring_subscription_module_management"/>
+    </record>
+</odoo>
+

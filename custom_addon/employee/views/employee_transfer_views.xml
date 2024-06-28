@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="employee_transfer_view_form" model="ir.ui.view">
+        <field name="name">employee.transfer.form</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <form string="Test">
+                <header>
+                    <button name="action_approve" class="oe_highlight" state='transfer' string="Approve" type="object"
+                            invisible="state in ['state', 'transfer']" groups="employee.employee_transfer_manager"/>
+                    <button name="action_to_approve" class="oe_highlight" state='to_approve' string="To Approve"
+                            type="object"
+                            invisible="state in ['state', 'to_approve']" groups="employee.employee_transfer_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,transfer"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="company_id"/>
+                        <field name="company_country_id"/>
+                        <field name="transfer_company_id"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="employee_transfer_view_tree" model="ir.ui.view">
+        <field name="name">employee.transfer.view.tree</field>
+        <field name="model">employee.transfer</field>
+        <field name="arch" type="xml">
+            <tree string="Test">
+                <field name="employee_id"/>
+                <field name="company_id"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="employee_transfer_action" model="ir.actions.act_window">
+        <field name="name">Employee Transfer</field>
+        <field name="res_model">employee.transfer</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="transfer_menu" name="Transfer" action="employee_transfer_action"/>
+</odoo>

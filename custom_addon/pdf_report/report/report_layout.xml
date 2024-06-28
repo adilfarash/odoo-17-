@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="external_layout_boxed">
+<!--        header-->
+        <div t-attf-class="header" t-att-style="report_header_style">
+            <div class="o_boxed_header">
+                <div class="row mb8">
+                    <div class="col-6">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="logo"/>
+                    </div>
+                    <div class="col-6 text-right mb4">
+                        <h4 class="mt0" t-girld="company.report_header"/>
+                        <div name="company_address" class="float-right mb4">
+<!--                            <span class="company_address" t-field="'company.partner_id"-->
+<!--                                  t-options='{"widget": "contact","fields":["address","name"],"no_marker": false}'/>-->
+                                      <span class="company_address" t-field="company.partner_id"
+                t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" t-if="report_type == 'pdf'" style="height:0px; width:100%;margin-left:10%;margin-top:50%;z-index:-1;">
+    <div class="col-6" name="watermark">
+        <span style="-webkit-transform:rotate(-45deg);
+                    color:coral;
+                    font-size:6em;
+                    text-align:center;
+                    position:absolute;
+                    opacity:0.2;">
+        WaterMark Here
+        </span>
+    </div>
+</div>
+        </div>
+
+<!--        body-->
+        <div t-attf-class="article o_report_layout_boxed"
+             t-att-data-oe-model="o and o._name"
+             t-att-data-oe-id="o and o.id"
+            t-att-data-oe-lang="o and o.env.context.get('lang')">
+            <t t-raw="0"/>
+        </div>
+<!--        footer-->
+        <div t-attf-class="footer o_boxed_footer">
+            <div class="text-center">
+                <div t-field="company.report_footer"/>
+                <div t-if="report_type == 'pdf' ">
+                    page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+    <record id="report_layout_standard_demo" model="report.layout">
+        <field name="name">Demo Layout</field>
+        <field name="sequence">2</field>
+        <field name="view_id" ref="new.external_layout_boxed"/>
+    </record>
+</odoo>

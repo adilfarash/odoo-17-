@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_method_payu" model="payment.method">
+        <field name="name">PayU</field>
+        <field name="code">payu</field>
+        <field name="sequence">1</field>
+        <field name="image" type="base64" file="payment_payu/static/img/payu.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_refund">partial</field>
+    </record>
+
+</odoo>

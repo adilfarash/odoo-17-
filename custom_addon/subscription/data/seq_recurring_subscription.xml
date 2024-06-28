@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+<!--     sequence-->
+        <record id="seq_recurring_subscription" model="ir.sequence">
+           <field name="name">subscription Sequence</field>
+           <field name="code">recurring.subscription</field>
+           <field name="prefix">RS-</field>
+           <field name="padding">10</field>
+       </record>
+</odoo>
